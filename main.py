@@ -1,5 +1,5 @@
-from Tetromino import Tetromino as tm
-from Game import Game
+from tetromino import Tetromino as tm
+from game import Game
 import pygame as pg
 import os
 
@@ -15,6 +15,7 @@ def main():
         win.fill((0, 0, 0))
         game.run_board(win)
         tm.draw(win)
+        Game.preview_tetro(win)
         score_text = game.main_font.render(
                         f"Score = {game.score}", 1, game.WHITE)
         
@@ -25,7 +26,7 @@ def main():
     
     while run:
         update_window()
-        current = tm.tetr_list[-1]
+        current = game.q.current()
         current.fall()
 
         for event in pg.event.get(): 
@@ -33,20 +34,24 @@ def main():
                 run = False
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:
-                    current.move()
+                    current.move(1)
+                    current.ghost.move(1)
                 elif event.key == pg.K_LEFT:
-                    current.move(operation="left")
+                    current.move(-1)
+                    current.ghost.move(-1)
                 # softdrop
-                elif event.key == pg.K_DOWN:
-                    current.fall()
+                # elif event.key == pg.K_DOWN:
+                #     current.fall()
                 # hardrop
                 elif event.key == pg.K_SPACE:
                     current.hardrop()
                 elif event.key == pg.K_x:
                     current.rotate()
+                    current.ghost.rotate()
                 elif event.key == pg.K_z:
                     current.rotate(right=False)
-
+                    current.ghost.rotate(right=False)
+                    
         pg.time.Clock().tick(fps)
 
 main()
