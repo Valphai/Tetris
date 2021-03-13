@@ -1,14 +1,6 @@
 import pygame as pg
 from game import Game
 
-CYAN = (0,255,255)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-ORANGE = (255,165,0)
-YELLOW = (255,255,0)
-PURPLE = (148,0,211)
-
 class Tetromino():
     def __init__(self, typ): # typ is a string in IJLOSTZ
         self.type = typ
@@ -30,13 +22,13 @@ class Tetromino():
         "Z" : [[4,5,9,10], [2,5,6,9]],
     }
     colors = {
-        "I" : CYAN, 
-        "J" : BLUE, 
-        "L" : ORANGE, 
-        "O" : YELLOW, 
-        "S" : GREEN, 
-        "T" : PURPLE, 
-        "Z" : RED, 
+        "I" : Game.CYAN, 
+        "J" : Game.BLUE, 
+        "L" : Game.ORANGE, 
+        "O" : Game.YELLOW, 
+        "S" : Game.GREEN, 
+        "T" : Game.PURPLE, 
+        "Z" : Game.RED, 
     }
 
     def hardrop(self):

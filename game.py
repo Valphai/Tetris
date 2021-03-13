@@ -17,6 +17,14 @@ class Game():
     GRAY = (150,150,150)
     DGRAY = (80,80,80)
     WHITE = (255, 255, 255)
+    CYAN = (0,255,255)
+    RED = (255,0,0)
+    GREEN = (0,255,0)
+    BLUE = (0,0,255)
+    ORANGE = (255,165,0)
+    YELLOW = (255,255,0)
+    PURPLE = (148,0,211)
+    
     pg.font.init()
     fontSize = 25
     main_font = pg.font.SysFont("arial", fontSize)
@@ -26,6 +34,7 @@ class Game():
     zoom = 40
     start = timeit.default_timer()
     times = 0
+    end = False
     
     @classmethod
     def hold(cls, curr):
@@ -83,6 +92,11 @@ class Game():
     
     @classmethod
     def clear_board(cls):
+        def end():
+            # if any letters present
+            if any(tm.Tetromino.board_matrix[0]):
+                return True
+                
         # If all elements in board_matrix's row are != 0, clear them
         update = [tm.Tetromino.board_matrix[i] for i in range(cls.BoardHeight) \
                                     if not all(tm.Tetromino.board_matrix[i])]
@@ -97,6 +111,9 @@ class Game():
             update[:0] = [[0 for _ in range(cls.BoardWidth)]]
         
         tm.Tetromino.board_matrix = update
+        
+        if end():
+            cls.end = True
         
     @classmethod
     def rect(cls, win, color, x=1, y=1, j_mult=1, i_mult=1,):
