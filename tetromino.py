@@ -39,29 +39,9 @@ class Tetromino():
         "Z" : RED, 
     }
 
-    @classmethod
-    def draw(cls, win):
-        """
-        Draws little squares on the board
-
-        This method uses 4x4 matrix and p determines which squares to fill
-        by traversing tetrinoes shapes
-        """
-        def rect(current, i, j):
-            pg.draw.rect(win, current.color, 
-            [(j + current.x)*Game.zoom, (i + current.y)*Game.zoom, 
-                                        Game.zoom - 1, Game.zoom - 1])
-    
-        current = Game.q.current()
-        for i in range(4):
-            for j in range(4):
-                p = i * 4 + j
-                if p in current.current_shape():
-                    rect(current, i, j)
-                    rect(current.ghost, i, j)
-
     def hardrop(self):
         setattr(self, "y", self.ghost.y)
+        self.freeze()
 
     def collides(self):
         # Checks collision on every block returns True if at least one collides
@@ -75,8 +55,9 @@ class Tetromino():
         return False
     
     def fall(self): # rename this
-        self.ghost.fall()
-        self.y += 1
+        self.ghost.fall(self.y)
+        if Game.delta_t():
+            self.y += 1
         if self.collides():
             self.y -= 1
             self.freeze()
@@ -99,20 +80,28 @@ class Tetromino():
                         if j + self.x + dx > Game.BoardWidth - 1 or \
                             0 > j + self.x + dx:
                                 return True
-            return False
         
         if not edge():
             self.x += dx
+            if self.collides():
+                self.x -= dx
 
 class Ghost(Tetromino):
     def __init__(self, typ):
         super().__init__(typ)
         self.color = Game.DGRAY
 
-    def fall(self):
+    def fall(self, current):
+        for i in range(Game.BoardHeight):
+            if current < i < self.y:
+                if Tetromino.board_matrix[i][self.x] != 0:
+                    self.y -= i
         while not self.collides():
             self.y += 1
-        self.y -=1
+        self.y -= 1
+        
+    def move(self, current):
+        setattr(self, "x", current)
 
 class Living(Tetromino):
     def __init__(self, typ):
@@ -130,4 +119,6 @@ class Living(Tetromino):
                 temp = i * 4 + j
                 if temp in self.current_shape():
                     Tetromino.board_matrix[i + self.y][j + self.x] = self.type
-        self.spawn()
+        Game.clear_board()
+        Game.times = 0
+        Living.spawn()

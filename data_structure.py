@@ -29,9 +29,12 @@ class Queue():
     def __init__(self):
         self.queue = []
         
+    def __len__(self):
+        return self.queue.__len__()
+        
     def add(self, new):
         self.queue.append(new)
-        if self.queue.__len__() > 2:
+        if self.__len__() > 2:
             del self.queue[0]
         
     def current(self):
