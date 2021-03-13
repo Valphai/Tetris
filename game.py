@@ -2,6 +2,7 @@ from data_structure import Stack, Queue
 import tetromino as tm
 import pygame as pg
 import timeit
+import db
 
 class Game():
     def __init__(self):
@@ -34,6 +35,7 @@ class Game():
     zoom = 40
     start = timeit.default_timer()
     times = 0
+    run = True
     end = False
     
     @classmethod
@@ -93,7 +95,7 @@ class Game():
     @classmethod
     def clear_board(cls):
         def end():
-            # if any letters present
+            # if any letters present at the top
             if any(tm.Tetromino.board_matrix[0]):
                 return True
                 
@@ -112,8 +114,10 @@ class Game():
         
         tm.Tetromino.board_matrix = update
         
-        if end():
+        if end() and not cls.end:
             cls.end = True
+            db.update_db(cls.score)
+            cls.run = False
         
     @classmethod
     def rect(cls, win, color, x=1, y=1, j_mult=1, i_mult=1,):

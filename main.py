@@ -7,11 +7,10 @@ pg.display.set_caption("Tetris")
 fps = 60
 
 def main():
-    run = True
     game = Game()
     win = pg.display.set_mode((game.WIDTH, game.HEIGHT))
     
-    while run:
+    while Game.run:
         if not Game.end:
             Game.update_window(win)
             current = game.q.current()
